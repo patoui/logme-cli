@@ -29,8 +29,9 @@ func main() {
 		Usage: "A tool to help with commands for LogMe app!",
 		Commands: []*cli.Command{
 			{
-				Name:  "m",
-				Usage: "migrate the database",
+				Name:    "migrate",
+				Aliases: []string{"m"},
+				Usage:   "migrate the database",
 				Description: `
 				This command will migrate the database while using the environment variables (.env or otherwise):
 					DB_ADDR - includes host and port
@@ -43,8 +44,9 @@ func main() {
 				},
 			},
 			{
-				Name:  "mt",
-				Usage: "migrate the test database",
+				Name:    "migrate-test",
+				Aliases: []string{"mt"},
+				Usage:   "migrate the test database",
 				Description: `
 				This command will migrate the database while using the environment variables (.env or otherwise):
 					DB_ADDR - includes host and port
