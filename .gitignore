@@ -1,0 +1,5 @@
+.env
+internal/logme/migrations
+.idea
+go.sum
+.vscode
