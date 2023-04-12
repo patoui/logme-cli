@@ -34,6 +34,7 @@ func main() {
 				Usage:   "migrate the database",
 				Description: `
 				This command will migrate the database while using the environment variables (.env or otherwise):
+					DB_LOCAL_ADDR - includes host and port
 					DB_ADDR - includes host and port
 					DB_NAME - name of the database to migrate (defaults to 'logme')
 					DB_USER (optional) - user to authenticate with
@@ -49,6 +50,7 @@ func main() {
 				Usage:   "migrate the test database",
 				Description: `
 				This command will migrate the database while using the environment variables (.env or otherwise):
+					DB_LOCAL_ADDR - includes host and port
 					DB_ADDR - includes host and port
 					DB_NAME - name of the database to migrate (defaults to 'logme'), '_test' will automatically be appended
 					DB_USER (optional) - user to authenticate with
@@ -81,9 +83,15 @@ func migrate(isTest bool) error {
 }
 
 func getDbConn(isTest bool) (driver.Conn, error) {
+	localAddr := os.Getenv("DB_LOCAL_ADDR")
 	addr := os.Getenv("DB_ADDR")
+
 	if addr == "" {
-		return nil, errors.New("environment variable DB_ADDR required for migrations")
+		addr = localAddr
+	}
+
+	if addr == "" {
+		return nil, errors.New("environment variable DB_ADDR or DB_LOCAL_ADDR required for migrations")
 	}
 
 	dbName := os.Getenv("DB_NAME")
