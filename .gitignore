@@ -2,3 +2,4 @@
 internal/logme/migrations
 .idea
 .vscode
+logme-cli

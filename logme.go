@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"os/exec"
 	"sort"
 	"strings"
 	"time"
@@ -58,6 +59,42 @@ func main() {
 				`,
 				Action: func(c *cli.Context) error {
 					return migrate(true)
+				},
+			},
+			{
+				Name:    "up",
+				Aliases: []string{"u"},
+				Usage:   "start logme docker containers",
+				Description: `Start logme containers`,
+				Action: func(c *cli.Context) error {
+					return up()
+				},
+			},
+			{
+				Name:    "down",
+				Aliases: []string{"d"},
+				Usage:   "stop logme docker containers",
+				Description: `Stop logme containers`,
+				Action: func(c *cli.Context) error {
+					return down()
+				},
+			},
+			{
+				Name:    "list",
+				Aliases: []string{"l"},
+				Usage:   "list logme docker containers",
+				Description: `List logme docker containers`,
+				Action: func(c *cli.Context) error {
+					return list()
+				},
+			},
+			{
+				Name:    "test",
+				Aliases: []string{"t"},
+				Usage:   "run logme test",
+				Description: `Run logme tests`,
+				Action: func(c *cli.Context) error {
+					return test()
 				},
 			},
 		},
@@ -230,3 +267,48 @@ func runMigrations(db driver.Conn) error {
 
 	return nil
 }
+
+func up() error {
+	out, err := exec.Command("/bin/sh", "-c", "docker-compose up", "-d").Output()
+
+	if (err != nil) {
+		return err
+	}
+
+	fmt.Printf("%s\n", out)
+
+	return nil
+}
+
+func down() error {
+	out, err := exec.Command("/bin/sh", "-c", "docker-compose down").Output()
+
+	if (err != nil) {
+		return err
+	}
+
+	fmt.Printf("%s\n", out)
+
+	return nil
+}
+
+func list() error {
+	out, err := exec.Command("/bin/sh", "-c", "docker ps --format \"table {{.ID}}\t{{.Names}}\t{{.State}}\t{{.Ports}}\"").Output()
+
+	if (err != nil) {
+		return err
+	}
+
+	fmt.Printf("%s\n", out)
+
+	return nil
+}
+
+func test() error {
+	out, _ := exec.Command("/bin/sh", "-c", "docker exec -i logme_server /usr/local/go/bin/go test").Output()
+
+	fmt.Printf("%s\n", out)
+
+	return nil
+}
+
