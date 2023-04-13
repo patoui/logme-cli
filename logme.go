@@ -123,7 +123,7 @@ func getDbConn(isTest bool) (driver.Conn, error) {
 	localAddr := os.Getenv("DB_LOCAL_ADDR")
 	addr := os.Getenv("DB_ADDR")
 
-	if addr == "" {
+	if localAddr != "" {
 		addr = localAddr
 	}
 
